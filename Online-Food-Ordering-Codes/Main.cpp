@@ -6,8 +6,8 @@ using namespace std;
 
 struct Order {
     int id;
-    string customerName;
-    string foodItem;
+    string customer_Name;
+    string food_Item;
     int priority;
 };
 
@@ -28,9 +28,9 @@ void addNormal() {
     Order o;
     o.id = orderID++;
     cout << "Enter customer name: ";
-    cin >> o.customerName;
+    cin >> o.customer_Name;
     cout << "Enter food item: ";
-    cin >> o.foodItem;
+    cin >> o.food_Item;
     o.priority = 0;
 
     normalQueue.push(o);
