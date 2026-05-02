@@ -23,7 +23,7 @@ stack<Order> history;
 
 int orderID = 1;
 
-// Add normal order
+
 void addNormal() {
     Order o;
     o.id = orderID++;
@@ -35,4 +35,121 @@ void addNormal() {
 
     normalQueue.push(o);
     cout << "Normal order added.\n";
+}
+
+void addPriority() {
+    Order o;
+    o.id = orderID++;
+    cout << "Enter customer name: ";
+    cin >> o.customer_Name;
+    cout << "Enter food item: ";
+    cin >> o.food_Item;
+    cout << "Enter priority (higher number = higher priority): ";
+    cin >> o.priority;
+
+    priorityQueue.push(o);
+    cout << "Priority order added.\n";
+}
+
+void processOrder() {
+    if (!priorityQueue.empty()) {
+        Order o = priorityQueue.top();
+        priorityQueue.pop();
+        history.push(o);
+        cout << "Processed priority order: " << o.customer_Name << " - " << o.food_Item << "\n";
+    } else if (!normalQueue.empty()) {
+        Order o = normalQueue.front();
+        normalQueue.pop();
+        history.push(o);
+        cout << "Processed normal order: " << o.customer_Name << " - " << o.food_Item << "\n";
+    } else {
+        cout << "No orders to process.\n";
+    }
+}
+
+void viewQueues() {
+    cout << "Normal Queue:\n";
+    queue<Order> temp = normalQueue;
+    while (!temp.empty()) {
+        Order o = temp.front();
+        temp.pop();
+        cout << "ID: " << o.id << ", Customer: " << o.customer_Name << ", Food: " << o.food_Item << "\n";
+    }
+
+    cout << "Priority Queue:\n";
+    priority_queue<Order, vector<Order>, CompareOrder> tempP = priorityQueue;
+    while (!tempP.empty()) {
+        Order o = tempP.top();
+        tempP.pop();
+        cout << "ID: " << o.id << ", Customer: " << o.customer_Name << ", Food: " << o.food_Item << ", Priority: " << o.priority << "\n";
+    }
+}
+
+void viewHistory() {
+    cout << "Order History:\n";
+    stack<Order> temp = history;
+    while (!temp.empty()) {
+        Order o = temp.top();
+        temp.pop();
+        cout << "ID: " << o.id << ", Customer: " << o.customer_Name << ", Food: " << o.food_Item << "\n";
+    }
+}
+
+void undoOrder() {
+    if (!history.empty()) {
+        Order o = history.top();
+        history.pop();
+        if (o.priority > 0) {
+            priorityQueue.push(o);
+        } else {
+            normalQueue.push(o);
+        }
+        cout << "Undid order: " << o.customer_Name << " - " << o.food_Item << "\n";
+    } else {
+        cout << "No orders to undo.\n";
+    }
+}
+
+int main() {
+    int choice;
+    do {
+        cout << "\nOnline Food Order Management System\n";
+        cout << "1. Add Normal Order\n";
+        cout << "2. Add Priority Order\n";
+        cout << "3. Process Order\n";
+        cout << "4. View Queues\n";
+        cout << "5. View History\n";
+        cout << "6. Undo Last Order\n";
+        cout << "7. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addNormal();
+                break;
+            case 2:
+                addPriority();
+                break;
+            case 3:
+                processOrder();
+                break;
+            case 4:
+                viewQueues();
+                break;
+            case 5:
+                viewHistory();
+                break;
+            case 6:
+                undoOrder();
+                break;
+            case 7:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice.\n";
+        }
+    } while (choice != 7);
+
+    return 0;
 }
